@@ -1,27 +1,11 @@
-from enum import Enum, auto
-from dataclasses import dataclass
-from typing import Optional
-import eth_abi
-from eth_typing.evm import Address
+from client.args import args
 from web3 import Web3, HTTPProvider
-from args import args
+import eth_abi
+
+from client.message import Message
 
 
 web3 = Web3(HTTPProvider(args.rpc))
-
-
-@dataclass
-class Message:
-    class MessageType(Enum):
-        Request = auto()
-        Accept = auto()
-        Msg = auto()
-    
-    _type: MessageType
-    content: bytes
-    receiver: Address
-    sender: Optional[Address]
-    timestamp: Optional[int]
 
 
 class Contract:
