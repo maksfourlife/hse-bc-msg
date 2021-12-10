@@ -9,9 +9,11 @@ web3 = Web3(HTTPProvider(args.rpc))
 
 
 class Contract:
+    """Обращается к контракту на блокчейне"""
+
     @staticmethod
     def get_message_count() -> int:
-        """Возвращает кол-во транзакций на контракте"""
+        """Возвращает кол-во транзакций"""
         # 0x3dbcc8d1
         # keccak256(messageCount)
 
@@ -40,6 +42,7 @@ class Contract:
     
     @staticmethod
     def send_message(msg: Message) -> None:
+        """Отправляет сообщение"""
         # 0xa32d6cb1
         # keccak256(sendMessage(uint8,bytes,address))
 

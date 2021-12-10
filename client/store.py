@@ -9,6 +9,8 @@ env = lmdb.open("db")
 
 
 class BaseStore:
+    """Базовый класс для взаимодействия с базой данных в файле db"""
+
     @staticmethod
     def put_many(data: Dict[bytes, bytes]) -> None:
         with env.begin(write=True, buffers=True) as txn:
@@ -30,6 +32,8 @@ class BaseStore:
 
 
 class ClientStore(BaseStore):
+    """Класс для сохранения и получения данных о сообщениях и ключах чатов"""
+
     MSG_COUNT_KEY = b"MSGCOUNT"
     MSG_PREFIX = b"MSG"
     KEY_PREFIX = b"KEY"
