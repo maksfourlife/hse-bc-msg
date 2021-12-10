@@ -11,8 +11,9 @@ contract MessageOracle {
 	struct Message {
 		MessageType _type;
 		bytes content;
-		address sender;
 		address receiver;
+		address sender;
+    uint time;
 	}
 
 	mapping(uint => Message) public messages;
@@ -22,8 +23,9 @@ contract MessageOracle {
 		messages[messageCount++] = Message(
 			_type,
 			content,
+			receiver,
 			msg.sender,
-			receiver
+      block.timestamp
 		);
 	}
 }
