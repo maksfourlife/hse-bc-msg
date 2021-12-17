@@ -1,6 +1,5 @@
 from typing import Any, Tuple
 
-
 # TODO заменить типы с Any на реальные
 
 

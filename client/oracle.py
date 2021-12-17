@@ -2,7 +2,7 @@ from typing import Callable
 from threading import Thread
 from time import sleep
 
-from client.contract import Contract, Message
+from client.message import Message
 from client.store import ClientStore
 
 

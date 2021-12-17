@@ -12,17 +12,6 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "-rpc",
-    help="rpc ссылка для подключения к блокчейну",
-    required=True
-)
-
-parser.add_argument(
-    "-contract",
-    help="адрес контракта мессенджера"
-)
-
-parser.add_argument(
     "-gasprice",
     help="цена газа",
     required=False
