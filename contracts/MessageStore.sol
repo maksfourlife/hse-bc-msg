@@ -1,31 +1,45 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.7;
 
-contract MessageOracle {
-	enum MessageType {
-		Request,
-		Accept,
-		Text
-	}
 
-	struct Message {
-		MessageType _type;
-		bytes content;
-		address receiver;
-		address sender;
-    uint time;
-	}
+contract MessageStore {
+    enum MessageType {
+        Request,
+        Accept,
+        Text
+    }
 
-	mapping(uint => Message) public messages;
-	uint public messageCount;
+    struct Message {
+        MessageType _type;
+        bytes content;
+        address sender;
+        uint timestamp;
+    }
 
-	function sendMessage(MessageType _type, bytes calldata content, address receiver) external {
-		messages[messageCount++] = Message(
-			_type,
-			content,
-			receiver,
-			msg.sender,
-      block.timestamp
-		);
-	}
+    event NewMessage(
+        address indexed receiver,
+        Message message
+    );
+
+    mapping(address => Message[]) public messages;
+
+    function messageCount(address receiver) public view returns (uint256) {
+        return messages[receiver].length;
+    }
+
+    function sendMessage(
+        MessageType _type,
+        bytes calldata content,
+        address receiver
+    ) external {
+        Message memory message = Message(
+            _type,
+            content,
+            msg.sender,
+            block.timestamp
+        );
+
+        messages[receiver].push(message);
+        emit NewMessage(receiver, message);
+    }
 }

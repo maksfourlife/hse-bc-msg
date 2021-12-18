@@ -12,14 +12,16 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "-ws",
-    help="WS ссылка для доступа к сети"
+    "-rpc",
+    help="rpc для доступа к сети",
+    default="https://polygon-rpc.com"
 )
 
 parser.add_argument(
     "-gasprice",
     help="цена газа",
-    required=False
+    required=False,
+    default=40000000000
 )
 
 args = parser.parse_args()
