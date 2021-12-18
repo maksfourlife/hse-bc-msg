@@ -31,7 +31,8 @@ class Message(Message):
     @staticmethod
     def make_request_message(receiver: str) -> Message:
         """
-        Создает и сохряняет публичный RSA ключ, создает сообщение содержащее его
+        Первое сообщение, для инициализации диалога.
+        Сохраняет для ключа `receiver` созданный здесь RSA ключ.
         """
 
         pub, priv = rsa.newkeys(RSA_NUM_BITS)
@@ -46,10 +47,11 @@ class Message(Message):
     @staticmethod
     def make_accept_message(receiver: str, pub: bytes) -> Message:
         """
-        Создает симметричный ключ и сохраняет его,
-        зашифровывает его с помощью `pub` и отправляет его
+        Второе сооющение для иницализации диалога.
+        Сохраняет для ключа `receiver` созданный здесь симметричный ключ.
+        Сообщение несет данный ключ, зашифрованный с помощью `pub`.
     
-        :param pub: публичный ключ в pkcs1 формате, полученный с контракта
+        :param pub: публичный ключ в pkcs1 формат из сообщения Request
         """
         key = secrets.token_bytes(AES_NUM_BYTES)
         store_key(receiver, key)
@@ -65,8 +67,8 @@ class Message(Message):
     @staticmethod
     def make_text_message(receiver: str, text: bytes) -> Message:
         """
-        Создает сообщение содержащее `text`,
-        зашифрованный с помощью сохраненного симметричного ключа 
+        Создает сообщение, содержащее `text`,
+        зашифрованное с помощью сохраненного симметричного ключа.
         """
         key = load_key(receiver)
         cipher = AES.new(key, AES.MODE_EAX)
