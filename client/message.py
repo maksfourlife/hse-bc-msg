@@ -26,10 +26,8 @@ class Message:
     sender: Optional[str] = None
     timestamp: Optional[int] = None
 
-
-class Message(Message):
     @staticmethod
-    def make_request_message(receiver: str) -> Message:
+    def make_request_message(receiver: str) -> "Message":
         """
         Первое сообщение, для инициализации диалога.
         Сохраняет для ключа `receiver` созданный здесь RSA ключ.
@@ -45,7 +43,7 @@ class Message(Message):
         )
 
     @staticmethod
-    def make_accept_message(receiver: str, pub: bytes) -> Message:
+    def make_accept_message(receiver: str, pub: bytes) -> "Message":
         """
         Второе сооющение для иницализации диалога.
         Сохраняет для ключа `receiver` созданный здесь симметричный ключ.
@@ -65,7 +63,7 @@ class Message(Message):
         )
 
     @staticmethod
-    def make_text_message(receiver: str, text: bytes) -> Message:
+    def make_text_message(receiver: str, text: bytes) -> "Message":
         """
         Создает сообщение, содержащее `text`,
         зашифрованное с помощью сохраненного симметричного ключа.
@@ -97,7 +95,7 @@ class Message(Message):
             return cipher.decrypt(self.content[AES_NUM_BYTES:])
 
     @staticmethod
-    def _from_payload(payload: List) -> Message:
+    def _from_payload(payload: List) -> "Message":
         """
         Helper для преобразования сырых данных со смарт-контракта в `Message`
         """

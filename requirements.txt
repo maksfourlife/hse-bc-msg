@@ -1,4 +1,4 @@
 web3
-eth_abi
 lmdb
 rsa
+pytest

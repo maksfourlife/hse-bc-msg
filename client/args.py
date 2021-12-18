@@ -14,14 +14,18 @@ parser.add_argument(
 parser.add_argument(
     "-rpc",
     help="rpc для доступа к сети",
-    default="https://polygon-rpc.com"
+    default=None
 )
 
 parser.add_argument(
     "-gasprice",
     help="цена за газ",
-    required=False,
     default=40000000000
 )
 
-ARGS = parser.parse_args()
+RPC = "https://polygon-rpc.com"
+ARGS = None
+
+if __name__ == "__main__":
+    ARGS = parser.parse_args()
+    RPC = RPC or ARGS.rpc

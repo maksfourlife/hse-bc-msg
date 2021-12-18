@@ -1,4 +1,5 @@
 import client.args
 from client.repl import Repl
 
-Repl.start()
+if __name__ == "__main__":
+    Repl.start()

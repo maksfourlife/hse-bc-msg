@@ -28,7 +28,13 @@ def store_key(txn, address: str, key: bytes):
 
 @with_env(write=False)
 def load_key(txn, address: str) -> bytes:
-    """Получает пару `address` - `key` из db"""
+    """Получает пару для `address` из db"""
     key = txn.get(address.encode())
     # print("read", address, key)
     return key
+
+
+@with_env(write=True)
+def delete_address(txn, address: str) -> bytes:
+    """Удаляет пару `address` из db"""
+    txn.delete(address.encode())

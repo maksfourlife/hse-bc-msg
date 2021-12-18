@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Generator, Optional
 from web3 import Web3, HTTPProvider
 from web3.middleware import geth_poa_middleware
@@ -5,16 +6,23 @@ from web3.exceptions import ContractLogicError
 import json
 
 from client.message import Message
-from client.args import ARGS
+from client.args import ARGS, RPC
+
+
+@dataclass
+class AccountMock:
+    address: Optional[str] = None
 
 
 CONTRACT_ABI = "contracts/MessageStorage.abi.json"
 CONTRACT_ADDRESS = "0xc76bE499BaD3079ff49f8Ac135B673aBC3591280"
 
-web3 = Web3(HTTPProvider(ARGS.rpc))
+web3 = Web3(HTTPProvider(RPC))
 web3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
-account = web3.eth.account.privateKeyToAccount(ARGS.secret)
+account = AccountMock()
+if hasattr(ARGS, "secret"):
+    account = web3.eth.account.privateKeyToAccount(ARGS.secret)
 
 abi = json.load(open(CONTRACT_ABI))
 contract = web3.eth.contract(CONTRACT_ADDRESS, abi=abi)
