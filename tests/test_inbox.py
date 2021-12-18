@@ -1,5 +1,4 @@
 from client.inbox import *
-from web3.exceptions import ContractLogicError
 
 
 account.address = "0xBdedBED81C6D7ceBDeDfFaecDeBd12063AF4f4fB"
