@@ -14,6 +14,8 @@ def test_message_out_of_bounds_reverts():
     except KeyError:
         return
 
+    assert False
+
 
 def test_message_in_bounds_returns():
     """Проверяет, что обращение в границах контракта возвращает сообщение"""
