@@ -24,4 +24,4 @@ parser.add_argument(
     default=40000000000
 )
 
-args = parser.parse_args()
+ARGS = parser.parse_args()

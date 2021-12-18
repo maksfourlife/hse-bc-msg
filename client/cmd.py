@@ -2,8 +2,6 @@ from cmd import Cmd
 from enum import Enum, auto
 from typing import Optional
 
-
-from client.web3 import contract, account
 from client.db import load_key
 
 from client.message import Message
@@ -100,3 +98,4 @@ class MsgCmd(Cmd):
     def do_q(self, arg):
         """Закрывает сеанс"""
         exit(0)
+
