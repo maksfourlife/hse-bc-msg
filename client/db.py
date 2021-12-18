@@ -5,6 +5,10 @@ env = lmdb.open("db")
 
 
 def with_env(write: bool):
+    """
+    Декоратор для ускорения написания функций, работающих с lmdb.
+    Инициализирует `env` и передает `txn` в декорируемую функцию
+    """
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
@@ -17,12 +21,14 @@ def with_env(write: bool):
 
 @with_env(write=True)
 def store_key(txn, address: str, key: bytes):
+    """Сохраняет пару `address` - `key` в db"""
     # print("write", address, key)
     txn.put(address.encode(), key)
 
 
 @with_env(write=False)
 def load_key(txn, address: str) -> bytes:
+    """Получает пару `address` - `key` из db"""
     key = txn.get(address.encode())
     # print("read", address, key)
     return key

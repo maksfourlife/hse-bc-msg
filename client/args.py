@@ -19,7 +19,7 @@ parser.add_argument(
 
 parser.add_argument(
     "-gasprice",
-    help="цена газа",
+    help="цена за газ",
     required=False,
     default=40000000000
 )

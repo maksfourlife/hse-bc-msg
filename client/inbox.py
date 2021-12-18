@@ -21,6 +21,7 @@ contract = web3.eth.contract(CONTRACT_ADDRESS, abi=abi)
 
 
 class Inbox:
+    """Статический класс для отправки и и загрузки сообщений со смарт-конракта"""
     @staticmethod
     def send_message(message: Message) -> None:
         receiver = Web3.toChecksumAddress(message.receiver)
@@ -46,10 +47,18 @@ class Inbox:
 
     @staticmethod
     def count() -> int:
+        """
+        Возвращает кол-во сообщений на адрес, соотвествующий приватному ключу,
+        переданному при запуске приложения
+        """
         return contract.functions.messageCount(account.address).call()
 
     @staticmethod
     def load(_id: int) -> Message:
+        """
+        Возвращает преобразованное сообщение под номером `id`,
+        отправленное на адрес как в `count()`
+        """
         try:
             payload = contract.functions.messages(account.address, _id).call()
         except ContractLogicError:
@@ -59,11 +68,17 @@ class Inbox:
 
     @classmethod
     def load_range(cls, rng: range) -> Generator[Message, None, None]:
+        """
+        Загружает сообщения по каждому индексу из `rng`
+        """
         for _id in rng:
             yield cls.load(_id)
 
     @classmethod
     def load_last(cls, sender: str) -> Optional[Message]:
+        """
+        Загружает последнее сообщение, отправленное с адреса `sender`
+        """
         sender = web3.toChecksumAddress(sender)
 
         count = contract.functions.messageCount(account.address).call()

@@ -30,6 +30,10 @@ class Message:
 class Message(Message):
     @staticmethod
     def make_request_message(receiver: str) -> Message:
+        """
+        Создает и сохряняет публичный RSA ключ, создает сообщение содержащее его
+        """
+
         pub, priv = rsa.newkeys(RSA_NUM_BITS)
         store_key(receiver, priv.save_pkcs1())
 
@@ -41,6 +45,12 @@ class Message(Message):
 
     @staticmethod
     def make_accept_message(receiver: str, pub: bytes) -> Message:
+        """
+        Создает симметричный ключ и сохраняет его,
+        зашифровывает его с помощью `pub` и отправляет его
+    
+        :param pub: публичный ключ в pkcs1 формате, полученный с контракта
+        """
         key = secrets.token_bytes(AES_NUM_BYTES)
         store_key(receiver, key)
 
@@ -54,6 +64,10 @@ class Message(Message):
 
     @staticmethod
     def make_text_message(receiver: str, text: bytes) -> Message:
+        """
+        Создает сообщение содержащее `text`,
+        зашифрованный с помощью сохраненного симметричного ключа 
+        """
         key = load_key(receiver)
         cipher = AES.new(key, AES.MODE_EAX)
         content = cipher.nonce + cipher.encrypt(text)
@@ -65,6 +79,10 @@ class Message(Message):
         )
 
     def decrypt(self) -> bytes:
+        """
+        Расшифровывает контент сообщения типа Accept и Text, соответсвенно, с помощью
+        приватного ключа rsa и симметричного ключа
+        """
         key = load_key(self.sender)
 
         if self._type == Message.MessageType.Accept:
@@ -78,6 +96,9 @@ class Message(Message):
 
     @staticmethod
     def _from_payload(payload: List) -> Message:
+        """
+        Helper для преобразования сырых данных со смарт-контракта в `Message`
+        """
         _type, content, sender, timestamp = payload
 
         return Message(

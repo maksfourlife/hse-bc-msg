@@ -1,10 +1,14 @@
-from re import L
 from client.inbox import Inbox
 from client.message import Message
 from client.db import store_key
 
 
 class Repl:
+    """
+    Статический класс для взаимодействия с пользователем.
+    Все функции, кроме `start()` не предназначены для вызова пользователем.
+    """
+
     current_chat = None
 
     def get_answer() -> bool:
@@ -89,6 +93,7 @@ class Repl:
 
     @classmethod
     def start(cls):
+        """Запускает бесконечный repl-цикл, запрашивающий пользовательский ввод"""
         while True:
             if cls.current_chat is not None:
                 print(f"({cls.current_chat})")
