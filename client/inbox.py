@@ -22,8 +22,8 @@ contract = web3.eth.contract(CONTRACT_ADDRESS, abi=abi)
 
 class Inbox:
     @staticmethod
-    def _send_message(message: Message) -> None:
-        receiver = message.toChecksumAddress(message.receiver)
+    def send_message(message: Message) -> None:
+        receiver = Web3.toChecksumAddress(message.receiver)
                 
         sendMessage = contract.functions.sendMessage(
             message._type.value,
@@ -48,7 +48,6 @@ class Inbox:
     def count() -> int:
         return contract.functions.messageCount(account.address).call()
 
-
     @staticmethod
     def load(_id: int) -> Message:
         try:
@@ -58,17 +57,17 @@ class Inbox:
 
         return Message._from_payload(payload)
 
-    @staticmethod
-    def load_range(rng: range) -> Generator[Message, None, None]:
+    @classmethod
+    def load_range(cls, rng: range) -> Generator[Message, None, None]:
         for _id in rng:
-            yield Message.load(_id)
+            yield cls.load(_id)
 
-    @staticmethod
-    def load_last(sender: str) -> Optional[Message]:
+    @classmethod
+    def load_last(cls, sender: str) -> Optional[Message]:
         sender = web3.toChecksumAddress(sender)
 
         count = contract.functions.messageCount(account.address).call()
 
-        for message in Message.load_range(range(count)[::-1]):
+        for message in cls.load_range(range(count)[::-1]):
             if message.sender == sender:
                 return message

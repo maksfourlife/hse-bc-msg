@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from enum import Enum, auto
+from enum import Enum
 from typing import List, Optional
 from Crypto.Cipher import AES
 import rsa
@@ -15,9 +15,9 @@ AES_NUM_BYTES = 16
 @dataclass
 class Message:
     class MessageType(Enum):
-        Request = auto()
-        Accept = auto()
-        Text = auto()
+        Request = 0
+        Accept = 1
+        Text = 2
     
     _type: MessageType
     content: bytes
@@ -55,7 +55,8 @@ class Message(Message):
     @staticmethod
     def make_text_message(receiver: str, text: bytes) -> Message:
         key = load_key(receiver)
-        content = rsa.encrypt(text, rsa.PublicKey.load_pkcs1(key))
+        cipher = AES.new(key, AES.MODE_EAX)
+        content = cipher.nonce + cipher.encrypt(text)
 
         return Message(
             Message.MessageType.Text,
@@ -63,22 +64,17 @@ class Message(Message):
             receiver
         )
 
-    def decrypt(self) -> Message:
+    def decrypt(self) -> bytes:
         key = load_key(self.sender)
 
-        if self._type == Message.MessageType.Request:
+        if self._type == Message.MessageType.Accept:
             return rsa.decrypt(
                 self.content,
                 rsa.PrivateKey.load_pkcs1(key)
             )
         elif self._type == Message.MessageType.Text:
-            cipher = AES.new(key, AES.MODE_EAX)
-            return cipher.decrypt(self.content)
-        else:
-            raise NotImplementedError(
-                f"Decryption is not impemented for "
-                f"{Message.MessageType.Request} messages"
-            )
+            cipher = AES.new(key, AES.MODE_EAX, nonce=self.content[:AES_NUM_BYTES])
+            return cipher.decrypt(self.content[AES_NUM_BYTES:])
 
     @staticmethod
     def _from_payload(payload: List) -> Message:
