@@ -1,33 +1,45 @@
 from cmd import Cmd
+from functools import wraps
+from threading import current_thread
+
+from client.message import Message
+
+
+def send_message(fn: str, receiver: str, *args) -> str:
+    return getattr(Message, fn)(receiver, *args).send()
 
 
 class MsgCmd(Cmd):
-    currenct_chat = None
+    current_chat = None
 
-    def do_request(self, arg):
+
+    def do_request(self, receiver):
         """Отправляет запрос на переписку на адрес: request 0x0..0"""
-        # raise NotImplemented
-        print("request")
-    
-    def do_accept(self, arg):
-        """Принимает запрос на переписку от адреса: accept 0x0..0"""
-        # raise NotImplemented
-        print("accept")
+        
+        print(send_message("make_request_message"), receiver)
 
-    def do_open(self, arg):
+    def do_accept(self, receiver):
+        """Принимает запрос на переписку от адреса: accept 0x0..0"""
+
+        print(send_message("make_accept_message"), receiver)
+
+    def do_open(self, address):
         """Открывает переписку с адресом 0x0..0"""
         # Устанавливается переменная {current_chat = 0x0000 | NONE} что открыт чат на адрес
-        raise NotImplemented
+        self.current_chat = address
+        # Вывести первое сообщение
 
     def do_close(self, arg):
         """Закрывает чат"""
-        raise NotImplemented
+        self.current_chat = None
 
-    def do_msg(self, arg):
+    def do_msg(self, text):
         """Отправляет сообщение в переписку по адресу: msg 0x0..0 \"Hello, my...\""""
-        # currenct_chat != None
-        # raise NotImplemented
-        print("msg")
+
+        if self.current_chat is None:
+            print("Откройте чат")
+        else:
+            print(send_message("make_text_message", self.current_chat, text))
 
     def do_up(self, arg):
         """Пролистывает чат вверх"""

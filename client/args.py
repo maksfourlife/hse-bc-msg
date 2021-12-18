@@ -12,6 +12,11 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    "-ws",
+    help="WS ссылка для доступа к сети"
+)
+
+parser.add_argument(
     "-gasprice",
     help="цена газа",
     required=False

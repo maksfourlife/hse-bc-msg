@@ -29,7 +29,7 @@ def load_key(txn, address: bytes) -> bytes:
     return txn.get(address)
 
 
-@with_env(wirte=True)
+@with_env(write=True)
 def store_message(txn, id: int, message: Message):
     txn.put(f"MSG{id}".encode(), pickle.dumps(message))
 
