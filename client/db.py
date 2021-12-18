@@ -17,12 +17,12 @@ def with_env(write: bool):
 
 @with_env(write=True)
 def store_key(txn, address: str, key: bytes):
-    print("write", address, key)
+    # print("write", address, key)
     txn.put(address.encode(), key)
 
 
 @with_env(write=False)
 def load_key(txn, address: str) -> bytes:
     key = txn.get(address.encode())
-    print("read", address, key)
+    # print("read", address, key)
     return key

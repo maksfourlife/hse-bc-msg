@@ -72,6 +72,7 @@ class Repl:
 
     @classmethod
     def send_message(cls, text):
+        """Отправляет сообщение в чат"""
         assert cls.current_chat is not None, "Чат не задан"
 
         message = Message.make_text_message(cls.current_chat, text.encode())
