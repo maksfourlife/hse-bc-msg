@@ -28,15 +28,16 @@ abi = json.load(open(CONTRACT_ABI))
 contract = web3.eth.contract(CONTRACT_ADDRESS, abi=abi)
 
 
-
-@classmethod
+class Inbox:
+    @classmethod
     def load_range(cls, rng: range) -> Generator[Message, None, None]:
         """
         Загружает сообщения по каждому индексу из `rng`
         """
         for _id in rng:
-            yield cls.load(_id)    
-@staticmethod
+            yield cls.load(_id)
+    
+    @staticmethod
     def count() -> int:
         """
         Возвращает кол-во сообщений на адрес, соотвествующий приватному ключу,
@@ -45,7 +46,7 @@ contract = web3.eth.contract(CONTRACT_ADDRESS, abi=abi)
         return contract.functions.messageCount(account.address).call()    
 
  
- @classmethod
+    @classmethod
     def load_last(cls, sender: str) -> Optional[Message]:
         """
         Загружает последнее сообщение, отправленное с адреса `sender`
@@ -59,7 +60,7 @@ contract = web3.eth.contract(CONTRACT_ADDRESS, abi=abi)
                 return message
 
 
-   @staticmethod
+    @staticmethod
     def load(_id: int) -> Message:
         """
         Возвращает преобразованное сообщение под номером `id`,
@@ -71,10 +72,11 @@ contract = web3.eth.contract(CONTRACT_ADDRESS, abi=abi)
             raise KeyError(_id)
 
         return Message._from_payload(payload)
-class Inbox:
-    """Статический класс для отправки и и загрузки сообщений со смарт-конракта"""
+
+
     @staticmethod
     def send_message(message: Message) -> None:
+        """Статический класс для отправки и и загрузки сообщений со смарт-конракта"""
         receiver = Web3.toChecksumAddress(message.receiver)
                 
         sendMessage = contract.functions.sendMessage(
@@ -94,4 +96,4 @@ class Inbox:
         txn["gasPrice"] = ARGS.gasprice
         
         raw = account.sign_transaction(txn)["rawTransaction"]
-        return web3.eth.send_raw_transaction(raw).hex()   
+        return web3.eth.send_raw_transaction(raw).hex()
