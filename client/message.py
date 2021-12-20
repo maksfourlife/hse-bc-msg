@@ -77,7 +77,19 @@ class Message:
             content,
             receiver
         )
+    @staticmethod
+    def _from_payload(payload: List) -> "Message":
+        """
+        Helper для преобразования сырых данных со смарт-контракта в `Message`
+        """
+        _type, content, sender, timestamp = payload
 
+        return Message(
+            Message.MessageType(_type),
+            content,
+            sender=sender,
+            timestamp=timestamp
+        )
     def decrypt(self) -> bytes:
         """
         Расшифровывает контент сообщения типа Accept и Text, соответсвенно, с помощью
@@ -94,16 +106,4 @@ class Message:
             cipher = AES.new(key, AES.MODE_EAX, nonce=self.content[:AES_NUM_BYTES])
             return cipher.decrypt(self.content[AES_NUM_BYTES:])
 
-    @staticmethod
-    def _from_payload(payload: List) -> "Message":
-        """
-        Helper для преобразования сырых данных со смарт-контракта в `Message`
-        """
-        _type, content, sender, timestamp = payload
 
-        return Message(
-            Message.MessageType(_type),
-            content,
-            sender=sender,
-            timestamp=timestamp
-        )
