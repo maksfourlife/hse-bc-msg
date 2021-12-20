@@ -19,13 +19,11 @@ class Repl:
             elif x == "n":
                 return False
 
-
-@classmethod
+    @classmethod
     def quit(cls):
         """Завершает работу приложения"""
         exit(0)
 
-   
     @classmethod
     def close(cls):
         """Закрывает открытый чат"""
@@ -34,14 +32,13 @@ class Repl:
             return print("Чат не открыт")
         cls.current_chat = None
     
-
-   
- @classmethod
+    @classmethod
     def reset(cls, address):
         """Сбрастывает текущий ключ шифрования в чате `address`"""
         
         print(Inbox.send_message(Message.make_request_message(address)))
- @classmethod
+    
+    @classmethod
     def send_message(cls, text):
         """Отправляет сообщение в чат"""
         assert cls.current_chat is not None, "Чат не задан"
@@ -49,21 +46,13 @@ class Repl:
         message = Message.make_text_message(cls.current_chat, text.encode())
         print(Inbox.send_message(message))
 
-    handlers = {
-        "help": help.__func__,
-        "quit": quit.__func__,
-        "open": open.__func__,
-        "close": close.__func__,
-        "reset": reset.__func__,
-        "msg": send_message.__func__
-    }
-@classmethod
+    @classmethod
     def help(cls):
         """Помощь по коммандам"""
         for cmd, fn in cls.handlers.items():
             print(f"{cmd}: {fn.__doc__}")
 
- @classmethod
+    @classmethod
     def open(cls, address: str):
         """Открывает чат с адресом `address`"""
         cls.current_chat = address
@@ -92,7 +81,17 @@ class Repl:
 
         else:
             print(last.decrypt())
- @classmethod
+    
+    handlers = {
+        "help": help.__func__,
+        "quit": quit.__func__,
+        "open": open.__func__,
+        "close": close.__func__,
+        "reset": reset.__func__,
+        "msg": send_message.__func__
+    }
+
+    @classmethod
     def start(cls):
         """Запускает бесконечный repl-цикл, запрашивающий пользовательский ввод"""
         while True:
