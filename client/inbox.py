@@ -36,7 +36,7 @@ class Inbox:
         """
         for _id in rng:
             yield cls.load(_id)
-    
+
     @staticmethod
     def count() -> int:
         """
@@ -45,7 +45,6 @@ class Inbox:
         """
         return contract.functions.messageCount(account.address).call()    
 
- 
     @classmethod
     def load_last(cls, sender: str) -> Optional[Message]:
         """
@@ -59,7 +58,6 @@ class Inbox:
             if message.sender == sender:
                 return message
 
-
     @staticmethod
     def load(_id: int) -> Message:
         """
@@ -72,7 +70,6 @@ class Inbox:
             raise KeyError(_id)
 
         return Message._from_payload(payload)
-
 
     @staticmethod
     def send_message(message: Message) -> None:
