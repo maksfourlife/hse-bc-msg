@@ -52,7 +52,13 @@ class Inbox:
         
         raw = account.sign_transaction(txn)["rawTransaction"]
         return web3.eth.send_raw_transaction(raw).hex()
-
+    @classmethod
+    def load_range(cls, rng: range) -> Generator[Message, None, None]:
+        """
+        Загружает сообщения по каждому индексу из `rng`
+        """
+        for _id in rng:
+            yield cls.load(_id)
     @staticmethod
     def count() -> int:
         """
@@ -61,28 +67,8 @@ class Inbox:
         """
         return contract.functions.messageCount(account.address).call()
 
-    @staticmethod
-    def load(_id: int) -> Message:
-        """
-        Возвращает преобразованное сообщение под номером `id`,
-        отправленное на адрес как в `count()`
-        """
-        try:
-            payload = contract.functions.messages(account.address, _id).call()
-        except ContractLogicError:
-            raise KeyError(_id)
-
-        return Message._from_payload(payload)
-
-    @classmethod
-    def load_range(cls, rng: range) -> Generator[Message, None, None]:
-        """
-        Загружает сообщения по каждому индексу из `rng`
-        """
-        for _id in rng:
-            yield cls.load(_id)
-
-    @classmethod
+ 
+ @classmethod
     def load_last(cls, sender: str) -> Optional[Message]:
         """
         Загружает последнее сообщение, отправленное с адреса `sender`
@@ -94,3 +80,18 @@ class Inbox:
         for message in cls.load_range(range(count)[::-1]):
             if message.sender == sender:
                 return message
+
+
+   @staticmethod
+    def load(_id: int) -> Message:
+        """
+        Возвращает преобразованное сообщение под номером `id`,
+        отправленное на адрес как в `count()`
+        """
+        try:
+            payload = contract.functions.messages(account.address, _id).call()
+        except ContractLogicError:
+            raise KeyError(_id)
+
+        return Message._from_payload(payload)
+   
