@@ -77,6 +77,7 @@ class Message:
             content,
             receiver
         )
+
     @staticmethod
     def _from_payload(payload: List) -> "Message":
         """
@@ -90,6 +91,7 @@ class Message:
             sender=sender,
             timestamp=timestamp
         )
+
     def decrypt(self) -> bytes:
         """
         Расшифровывает контент сообщения типа Accept и Text, соответсвенно, с помощью
@@ -105,5 +107,4 @@ class Message:
         elif self._type == Message.MessageType.Text:
             cipher = AES.new(key, AES.MODE_EAX, nonce=self.content[:AES_NUM_BYTES])
             return cipher.decrypt(self.content[AES_NUM_BYTES:])
-
 
