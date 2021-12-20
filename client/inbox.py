@@ -28,44 +28,21 @@ abi = json.load(open(CONTRACT_ABI))
 contract = web3.eth.contract(CONTRACT_ADDRESS, abi=abi)
 
 
-class Inbox:
-    """Статический класс для отправки и и загрузки сообщений со смарт-конракта"""
-    @staticmethod
-    def send_message(message: Message) -> None:
-        receiver = Web3.toChecksumAddress(message.receiver)
-                
-        sendMessage = contract.functions.sendMessage(
-            message._type.value,
-            message.content,
-            receiver
-        )
 
-        txn = {
-            "chainId": 137,
-            "to": contract.address,
-            "data": sendMessage._encode_transaction_data(),
-            "nonce": web3.eth.get_transaction_count(account.address)
-        }
-
-        txn["gas"] = web3.eth.estimate_gas(txn) * 2
-        txn["gasPrice"] = ARGS.gasprice
-        
-        raw = account.sign_transaction(txn)["rawTransaction"]
-        return web3.eth.send_raw_transaction(raw).hex()
-    @classmethod
+@classmethod
     def load_range(cls, rng: range) -> Generator[Message, None, None]:
         """
         Загружает сообщения по каждому индексу из `rng`
         """
         for _id in rng:
-            yield cls.load(_id)
-    @staticmethod
+            yield cls.load(_id)    
+@staticmethod
     def count() -> int:
         """
         Возвращает кол-во сообщений на адрес, соотвествующий приватному ключу,
         переданному при запуске приложения
         """
-        return contract.functions.messageCount(account.address).call()
+        return contract.functions.messageCount(account.address).call()    
 
  
  @classmethod
@@ -94,4 +71,27 @@ class Inbox:
             raise KeyError(_id)
 
         return Message._from_payload(payload)
-   
+class Inbox:
+    """Статический класс для отправки и и загрузки сообщений со смарт-конракта"""
+    @staticmethod
+    def send_message(message: Message) -> None:
+        receiver = Web3.toChecksumAddress(message.receiver)
+                
+        sendMessage = contract.functions.sendMessage(
+            message._type.value,
+            message.content,
+            receiver
+        )
+
+        txn = {
+            "chainId": 137,
+            "to": contract.address,
+            "data": sendMessage._encode_transaction_data(),
+            "nonce": web3.eth.get_transaction_count(account.address)
+        }
+
+        txn["gas"] = web3.eth.estimate_gas(txn) * 2
+        txn["gasPrice"] = ARGS.gasprice
+        
+        raw = account.sign_transaction(txn)["rawTransaction"]
+        return web3.eth.send_raw_transaction(raw).hex()   
