@@ -20,7 +20,7 @@ class Repl:
                 return False
 
 
-    @classmethod
+@classmethod
     def quit(cls):
         """Завершает работу приложения"""
         exit(0)
@@ -33,7 +33,7 @@ class Repl:
         if cls.current_chat is None:
             return print("Чат не открыт")
         cls.current_chat = None
-
+    
 
    
  @classmethod
