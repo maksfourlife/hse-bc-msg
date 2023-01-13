@@ -1,22 +1,22 @@
-# hse-bc-msg
-P2P клиент для обмена сообщениями на EVM блокчейнах с поддержкой RSA
+#hse-bc-msg
+P2P client for messaging on EVM blockchains with RSA support
 
-Консольное Repl приложение для обмена сообщениями.
+Console Repl application for messaging.
 
-Для запуска введите секретный ключ вашего Matic кошелька -secret
+To start, enter the secret key of your Matic wallet -secret
 
-- Для того, чтобы открыть чат, введите `> open 0x0..0 (адрес)`
-  - Если это первое сообщение и ключ шифрования не был установлен, вам будет предложено отправить получателю запрос на переписку
-  - Если запрос был отправлен вам, будет предложено его принять
-  - Находясь в чате, вы можете отправить сообщение, введя `> msg "Текст сообщения"`
-  - Для выхода, введите `> close`
+- To open a chat, type `> open 0x0..0 (address)`
+   - If this is the first message and the encryption key has not been set, you will be prompted to send the recipient a message request
+   - If the request was sent to you, you will be prompted to accept it
+   - While in a chat, you can send a message by typing `> msg "Message text"`
+   - To exit, type `> close`
 
-- Вы можете сбросить ключ шифрования, введя `> reset 0x0.00 (адрес)`
+- You can reset the encryption key by typing `> reset 0x0.00 (address)`
 
-*** В данный момент приложение находится в бета версии и имеет недочеты
-  - для просмотра доступно только последнее сообщение
-  - для вступления изменений в силу, чат нужно переоткрывать
+*** At the moment the application is in beta version and has some bugs
+   - only the last message is available for viewing
+   - for the changes to take effect, the chat must be reopened
   
-- Для выхода из приложения, используйте ^C или `> quit`
+- To exit the application, use ^C or `> quit`
 
-При запуске можно указать опциональные аргументы -rpc и -gasprice
+At startup, you can specify the optional arguments -rpc and -gasprice
